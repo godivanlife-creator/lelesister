@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐶樂樂姐-爸寶、球控 的專屬網頁</title>
+    <style>
+        :root {
+            --main-color: #FF7FB6; /* 溫暖的粉色 */
+            --light-color: #FFF0F6;
+            --dark-text: #333;
+            --btn-sms: #007aff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--light-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            width: 85%;
+            max-width: 380px;
+            padding: 40px 20px;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(255, 127, 182, 0.15);
+            text-align: center;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .profile-img {
+            font-size: 80px;
+            width: 140px;
+            height: 140px;
+            line-height: 140px;
+            background: #fff;
+            margin: 0 auto 20px;
+            display: block;
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        h1 {
+            color: var(--main-color);
+            font-size: 28px;
+            margin: 10px 0;
+        }
+
+        .tagline {
+            font-size: 16px;
+            color: #666;
+            margin: 5px 0 15px;
+        }
+
+        .motto {
+            font-size: 18px;
+            color: #555;
+            margin: 15px 0 25px;
+            line-height: 1.5;
+            background: #FFF9FB;
+            padding: 15px;
+            border-radius: 20px;
+            border: 1px dashed var(--main-color);
+        }
+
+        .btn {
+            display: block;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* 簡訊通知按鈕樣式 */
+        .btn-sms {
+            background: var(--btn-sms);
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 6px 15px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-call {
+            background: #4CAF50;
+            color: white;
+            font-size: 18px;
+        }
+
+        .btn-ig {
+            background: var(--main-color);
+            color: white;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .loading {
+            display: none;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--main-color);
+            font-weight: bold;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="profile-img">🐶</div>
+    
+    <h1>樂樂姐</h1>
+    <p class="tagline">✨ 爸寶、球控 ✨</p>
+
+    <div class="motto">
+        樂Q家愛揪團出遊❤️<br>
+        歡迎大家一起來玩 👋
+    </div>
+
+    <button class="btn btn-sms" onclick="sendSMSLocation()">📍 簡訊通報主人位置</button>
+    <div id="loadingText" class="loading">正在定位中...請稍候</div>
+
+    <a href="tel:0985531557" class="btn btn-call">📞 緊急撥打給家人</a>
+    
+    <a href="https://www.instagram.com/beloved_qq?igsh=bGN2Mzd5bmhlYjVp" target="_blank" class="btn btn-ig">📸 我的 IG 日常</a>
+    
+    <div style="margin-top: 30px; font-size: 12px; color: #bbb;">NFC Smart Tag Powered</div>
+</div>
+
+<script>
+    function sendSMSLocation() {
+        const loading = document.getElementById('loadingText');
+        loading.style.display = 'block';
+
+        // 使用 Google 原生定位
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                // 產生 Google 地圖網址
+                const mapUrl = `http://www.google.com/maps?q=${lat},${lng}`;
+                
+                // 設定收件人與內容
+                const phoneNumber = "0985531557";
+                const message = encodeURIComponent(`【樂樂姐尋寵通報】我發現了樂樂姐！目前位置：${mapUrl}`);
+                
+                // 喚起手機簡訊介面
+                window.location.href = `sms:${phoneNumber}?body=${message}`;
+                loading.style.display = 'none';
+            }, (error) => {
+                loading.style.display = 'none';
+                alert("無法取得精確定位，將直接開啟簡訊對話。");
+                window.location.href = `sms:0985531557?body=${encodeURIComponent("【樂樂姐尋寵通報】我發現了樂樂姐，請與我聯繫。")}`;
+            }, { 
+                enableHighAccuracy: true, 
+                timeout: 8000, 
+                maximumAge: 0 
+            });
+        } else {
+            alert("您的裝置不支援定位功能。");
+            loading.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
