@@ -78,6 +78,7 @@
             border: none;
             cursor: pointer;
             width: 100%;
+            box-sizing: border-box;
         }
 
         /* 簡訊通知按鈕樣式 */
@@ -150,25 +151,26 @@
         const loading = document.getElementById('loadingText');
         loading.style.display = 'block';
 
-        // 使用 Google 原生定位
+        // 檢查瀏覽器是否支援定位
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const lng = position.coords.longitude;
-                // 產生 Google 地圖網址
-                const mapUrl = `http://www.google.com/maps?q=${lat},${lng}`;
+                
+                // 產生 Google 地圖網址 (修正字串拼接符號)
+                const mapUrl = "https://www.google.com/maps?q=" + lat + "," + lng;
                 
                 // 設定收件人與內容
                 const phoneNumber = "0985531557";
-                const message = encodeURIComponent(`【樂樂姐尋寵通報】我發現了樂樂姐！目前位置：${mapUrl}`);
+                const message = encodeURIComponent("【樂樂姐尋寵通報】我發現了樂樂姐！目前位置：" + mapUrl);
                 
                 // 喚起手機簡訊介面
-                window.location.href = `sms:${phoneNumber}?body=${message}`;
+                window.location.href = "sms:" + phoneNumber + "?body=" + message;
                 loading.style.display = 'none';
             }, (error) => {
                 loading.style.display = 'none';
                 alert("無法取得精確定位，將直接開啟簡訊對話。");
-                window.location.href = `sms:0985531557?body=${encodeURIComponent("【樂樂姐尋寵通報】我發現了樂樂姐，請與我聯繫。")}`;
+                window.location.href = "sms:0985531557?body=" + encodeURIComponent("【樂樂姐尋寵通報】我發現了樂樂姐，請與我聯繫。");
             }, { 
                 enableHighAccuracy: true, 
                 timeout: 8000, 
